@@ -20,3 +20,13 @@ jobs:
         kubectl create deployment --image nginx my-nginx
         kubectl get pods
         kubectl get nodes
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.6'
+      - name: Install python requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run unittests
+        run: ./run_tests.sh
