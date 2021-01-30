@@ -1,20 +1,14 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from datetime import datetime, timedelta
 
@@ -27,6 +21,7 @@ from liminal.core.util import files_util
 from liminal.runners.airflow.model.task import Task
 from liminal.runners.airflow.tasks.defaults.job_end import JobEndTask
 from liminal.runners.airflow.tasks.defaults.job_start import JobStartTask
+import logging
 
 __DEPENDS_ON_PAST = 'depends_on_past'
 
@@ -35,13 +30,13 @@ def register_dags(configs_path):
     """
     Registers pipelines in liminal yml files found in given path (recursively) as airflow DAGs.
     """
-    print(f'Registering DAG from path: {configs_path}')
+    logging.info(f'Registering DAG from path: {configs_path}')
     config_files = files_util.find_config_files(configs_path)
 
     dags = []
-    print(f'found {len(config_files)} in path: {configs_path}')
+    logging.info(f'found {len(config_files)} in path: {configs_path}')
     for config_file in config_files:
-        print(f'Registering DAG for file: {config_file}')
+        logging.info(f'Registering DAG for file: {config_file}')
 
         with open(config_file) as stream:
             config = yaml.safe_load(stream)
@@ -84,7 +79,7 @@ def register_dags(configs_path):
                 job_end_task = JobEndTask(dag, config, pipeline, {}, parent, 'all_done')
                 job_end_task.apply_task_to_dag()
 
-                print(f'registered DAG {dag.dag_id}: {dag.tasks}')
+                logging.info(f'registered DAG {dag.dag_id}: {dag.tasks}')
 
                 globals()[pipeline_name] = dag
                 dags.append(dag)
@@ -92,7 +87,7 @@ def register_dags(configs_path):
     return dags
 
 
-print(f'Loading task implementations..')
+logging.info(f'Loading task implementations..')
 
 # TODO: add configuration for user tasks package
 impl_packages = 'liminal.runners.airflow.tasks'
@@ -108,7 +103,7 @@ tasks_by_liminal_name = tasks_by_liminal_name(
     class_util.find_subclasses_in_packages([impl_packages], Task)
 )
 
-print(f'Finished loading task implementations: {tasks_by_liminal_name}')
+logging.info(f'Finished loading task implementations: {tasks_by_liminal_name}')
 
 
 def get_task_class(task_type):
