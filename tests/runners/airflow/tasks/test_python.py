@@ -40,7 +40,7 @@ class TestPythonTask(TestCase):
 
         task0 = self.__create_python_task(dag,
                                           'my_input_task',
-                                          None,
+                                          [],
                                           'my_python_task_img',
                                           'python -u write_inputs.py',
                                           env_vars={
@@ -51,7 +51,7 @@ class TestPythonTask(TestCase):
 
         task1 = self.__create_python_task(dag,
                                           'my_output_task',
-                                          dag.tasks[0],
+                                          [dag.tasks[0]],
                                           'my_parallelized_python_task_img',
                                           'python -u write_outputs.py',
                                           executors=3)
