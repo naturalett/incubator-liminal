@@ -134,7 +134,7 @@ class TestPythonTask(TestCase):
             task_config['executors'] = executors
 
         return python.PythonTask(dag=dag,
-                                 self.liminal_config,
+                                 liminal_config=self.liminal_config,
                                  pipeline_config={
                                      'pipeline': 'my_pipeline'
                                  },
