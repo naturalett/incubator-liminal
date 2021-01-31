@@ -22,6 +22,7 @@ from unittest import TestCase
 
 from liminal.build import liminal_apps_builder
 from liminal.kubernetes import volume_util
+from liminal.runners.airflow import DummyDag
 from liminal.runners.airflow.tasks import python
 from tests.util import dag_test_utils
 
@@ -59,7 +60,7 @@ class TestPythonTask(TestCase):
 
         for task in dag.tasks:
             print(f'Executing task {task.task_id}')
-            task.execute({})
+            task.execute(DummyDag('my_dag', task.task_id).context)
 
         inputs_dir = os.path.join(self.temp_dir, 'inputs')
         outputs_dir = os.path.join(self.temp_dir, 'outputs')
