@@ -31,4 +31,5 @@ jobs:
     - name: Run unittests
       run: ./run_tests.sh
     - name: Print pod spec
+      if: ${{ always() }}
       run: kubectl get pod -n default | grep my-input-task | awk '{print $1}' | xargs -I {} kubectl describe pod -n staging {}
