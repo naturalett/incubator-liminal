@@ -32,7 +32,23 @@ class TestPythonTask(TestCase):
 
     def setUp(self) -> None:
         volume_util.delete_local_volume(self._VOLUME_NAME)
+        os.environ['TMPDIR'] = '/tmp'
         self.temp_dir = tempfile.mkdtemp()
+        self.liminal_config = {
+            'volumes': [
+                {
+                    'volume': self._VOLUME_NAME,
+                    'local': {
+                        'path': self.temp_dir.replace(
+                            "/var/folders",
+                            "/private/var/folders"
+                        )
+                    }
+                }
+            ]
+        }
+        volume_util.create_local_volumes(self.liminal_config, None)
+
         liminal_apps_builder.build_liminal_apps(
             os.path.join(os.path.dirname(__file__), '../liminal'))
 
