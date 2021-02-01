@@ -29,11 +29,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Netstat 1
+      if: ${{ always() }}
       run: netstat | grep 9294
     - name: Docker status
+      if: ${{ always() }}
       run: service docker status
+    - name: Docker images 1
+      if: ${{ always() }}
+      run: docker image ls
     - name: Run unittests
       run: ./run_tests.sh
+    - name: Docker images 2
+      if: ${{ always() }}
+      run: docker image ls
     - name: Netstat 1
       if: ${{ always() }}
       run: netstat
