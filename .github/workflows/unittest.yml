@@ -28,8 +28,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Netstat 1
+      run: netstat | grep 9294
+    - name: Docker status
+      run: service docker status
     - name: Run unittests
       run: ./run_tests.sh
+    - name: Netstat 1
+      if: ${{ always() }}
+      run: netstat
     - name: Print pod spec
       if: ${{ always() }}
       run: kubectl get pod -n default | grep my-input-task | awk '{print $1}' | xargs -I {} kubectl describe pod -n default {}
