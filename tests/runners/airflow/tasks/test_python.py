@@ -83,7 +83,7 @@ class TestPythonTask(TestCase):
 
         self.assertListEqual(os.listdir(self.temp_dir), ['outputs', 'inputs'])
 
-        inputs_dir_contents = os.listdir(inputs_dir)
+        inputs_dir_contents = sorted(os.listdir(inputs_dir))
 
         self.assertListEqual(inputs_dir_contents, ['0', '1', '2'])
 
