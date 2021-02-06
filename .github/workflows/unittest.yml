@@ -14,7 +14,7 @@ jobs:
         cat /etc/rancher/k3s/k3s.yaml
         mkdir -p ~/.kube
         cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
-        /etc/rancher/k3s/registries.yaml
+        sudo apt-get install libnss-myhostname -y
     - name: add registry
       run: |
         mirrors:
