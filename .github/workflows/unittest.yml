@@ -10,10 +10,22 @@ jobs:
     - uses: actions/checkout@v2
     - name: install k8s
       run: |
+        apt-get install libnss-myhostname
         curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE=777 sh -
         cat /etc/rancher/k3s/k3s.yaml
         mkdir -p ~/.kube
         cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+        /etc/rancher/k3s/registries.yaml
+    - name: add registry
+      run: |
+        mirrors:
+          "192.168.2.110:5055":
+            endpoint:
+              - "http://192.168.2.110:5055"
+        kubectl cluster-info
+        kubectl create deployment --image nginx my-nginx
+        kubectl get pods
+        kubectl get nodes
     - name: example tests
       run: |
         kubectl cluster-info
@@ -40,6 +52,12 @@ jobs:
     - name: Docker images 2
       if: ${{ always() }}
       run: docker image ls
+    - name: pvc
+      if: ${{ always() }}
+      run: kubectl get pvc -n default
+    - name: pv
+      if: ${{ always() }}
+      run: kubectl get pv
     - name: Netstat 1
       if: ${{ always() }}
       run: netstat
