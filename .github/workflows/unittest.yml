@@ -15,16 +15,6 @@ jobs:
         mkdir -p ~/.kube
         cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
         sudo apt-get install libnss-myhostname -y
-    - name: add registry
-      run: |
-        mirrors:
-          "192.168.2.110:5055":
-            endpoint:
-              - "http://192.168.2.110:5055"
-        kubectl cluster-info
-        kubectl create deployment --image nginx my-nginx
-        kubectl get pods
-        kubectl get nodes
     - name: example tests
       run: |
         kubectl cluster-info
