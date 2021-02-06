@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: install k8s
       run: |
-        apt-get install libnss-myhostname
+        sudo apt-get install libnss-myhostname
         curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE=777 sh -
         cat /etc/rancher/k3s/k3s.yaml
         mkdir -p ~/.kube
@@ -64,3 +64,9 @@ jobs:
     - name: Print pod spec
       if: ${{ always() }}
       run: kubectl get pod -n default | grep my-input-task | awk '{print $1}' | xargs -I {} kubectl describe pod -n default {}
+    - name: Run image
+      if: ${{ always() }}
+      run: docker run docker.io/rancher/my_python_task_img
+    - name: Run check img
+      if: ${{ always() }}
+      run: docker ps
