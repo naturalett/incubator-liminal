@@ -49,9 +49,3 @@ jobs:
     - name: Print pod spec
       if: ${{ always() }}
       run: kubectl get pod -n default | grep my-input-task | awk '{print $1}' | xargs -I {} kubectl describe pod -n default {}
-    - name: Run image
-      if: ${{ always() }}
-      run: docker run docker.io/rancher/my_python_task_img
-    - name: Run check img
-      if: ${{ always() }}
-      run: docker ps
